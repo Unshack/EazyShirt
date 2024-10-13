@@ -10,6 +10,7 @@ export default function Badge({ children, className }: BadgeProps) {
     <span
       className={cn(
         "w-fit bg-primary px-2 py-1 text-xs text-primary-foreground",
+        className,
       )}
     >
       {children}
