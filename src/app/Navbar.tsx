@@ -1,10 +1,11 @@
 import logo from "@/assets/shirt.svg";
+import { getWixServerClient } from "@/lib/wix-client.server";
 import { getCart } from "@/wix-api/cart";
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function Navbar() {
-  const cart = await getCart();
+  const cart = await getCart(getWixServerClient());
 
   const totalQuantity =
     cart?.lineItems.reduce((acc, item) => acc + (item.quantity || 0), 0) || 0;
@@ -16,6 +17,7 @@ export default async function Navbar() {
           <Image src={logo} alt="Eazy Shirt logo" width={30} height={30} />
           <span className="text-xl font-bold">Eazy Shirt</span>
         </Link>
+        {totalQuantity} items in your cart
       </div>
     </header>
   );
