@@ -41,6 +41,7 @@ export async function queryProducts({
 }
 
 export async function getProductBySlug(slug: string) {
+
   const wixClient = getWixClient();
 
   const { items } = await wixClient.products
