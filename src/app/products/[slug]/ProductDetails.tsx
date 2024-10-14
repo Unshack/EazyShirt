@@ -10,6 +10,13 @@ import ProductPrice from "./ProductPrice";
 import ProductMedia from "./ProductMedia";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { InfoIcon } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface ProductDetailsProps {
   product: products.Product;
@@ -88,6 +95,29 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
               )}
           </div>
         </div>
+        {!!product.additionalInfoSections?.length && (
+          <div className="space-y-1.5 text-sm text-muted-foreground">
+            <span className="flex items-center gap-2">
+              <InfoIcon className="size-5" />
+              <span>Additional product information</span>
+            </span>
+            <Accordion type="multiple">
+              {product.additionalInfoSections.map((section) => (
+                <AccordionItem value={section.title || ""} key={section.title}>
+                  <AccordionTrigger>{section.title}</AccordionTrigger>
+                  <AccordionContent>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: section.description || "",
+                      }}
+                      className="prose text-sm text-muted-foreground dark:prose-invert"
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        )}
       </div>
     </div>
   );
