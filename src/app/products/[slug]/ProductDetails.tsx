@@ -45,9 +45,22 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const availableQuantityExceeded =
     !!availableQuantity && quantity > availableQuantity;
 
+  const selectedOptionsMedia = product.productOptions?.flatMap((option) => {
+    const selectedChoice = option.choices?.find(
+      (choice) => choice.description === selectedOptions[option.name || ""],
+    );
+    return selectedChoice?.media?.items ?? [];
+  });
+
   return (
     <div className="flex flex-col gap-10 md:flex-row lg:gap-20">
-      <ProductMedia media={product.media?.items} />
+      <ProductMedia
+        media={
+          !!selectedOptionsMedia?.length
+            ? selectedOptionsMedia
+            : product.media?.items
+        }
+      />
       <div className="basis-3/5 space-y-5">
         <div className="space-y-2.5">
           <h1 className="text-3xl font-bold lg:text-4xl">{product.name}</h1>
