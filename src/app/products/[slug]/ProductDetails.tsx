@@ -8,6 +8,8 @@ import { useState } from "react";
 import { checkInStock, findVariant } from "@/lib/utils";
 import ProductPrice from "./ProductPrice";
 import ProductMedia from "./ProductMedia";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface ProductDetailsProps {
   product: products.Product;
@@ -29,6 +31,12 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   const selectedVariant = findVariant(product, selectedOptions);
 
   const inStock = checkInStock(product, selectedOptions);
+
+  const availableQuantity =
+    selectedVariant?.stock?.quantity ?? product.stock?.quantity;
+
+  const availableQuantityExceeded =
+    !!availableQuantity && quantity > availableQuantity;
 
   return (
     <div className="flex flex-col gap-10 md:flex-row lg:gap-20">
@@ -60,6 +68,25 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
         <div>
           Variant:
           {JSON.stringify(selectedVariant?.choices)}
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="quantity">Quantity</Label>
+          <div className="flex items-center gap-2.5">
+            <Input
+              name="quantity"
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              className="w-24"
+              disabled={!inStock}
+            />
+            {!!availableQuantity &&
+              (availableQuantityExceeded || availableQuantity < 10) && (
+                <span className="text-destructive">
+                  Only {availableQuantity} left in stock
+                </span>
+              )}
+          </div>
         </div>
       </div>
     </div>
