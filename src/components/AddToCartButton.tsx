@@ -1,9 +1,9 @@
 import { useAddItemToCart } from "@/hooks/cart";
+import { cn } from "@/lib/utils";
 import { products } from "@wix/stores";
+import { ShoppingCartIcon } from "lucide-react";
 import LoadingButton from "./LoadingButton";
 import { ButtonProps } from "./ui/button";
-import { cn } from "@/lib/utils";
-import { ShoppingCartIcon } from "lucide-react";
 
 interface AddToCartButtonProps extends ButtonProps {
   product: products.Product;
