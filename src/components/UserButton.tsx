@@ -10,9 +10,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuLabel,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal,
+  DropdownMenuSubContent,
 } from "./ui/dropdown-menu";
-import { LogInIcon, LogOutIcon, UserIcon } from "lucide-react";
+import { Check, LogInIcon, LogOutIcon, Monitor, UserIcon } from "lucide-react";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 interface UserButtonProps {
   loggedInMember: members.Member | null;
@@ -24,6 +29,8 @@ export default function UserButton({
   className,
 }: UserButtonProps) {
   const { login, logout } = useAuth();
+
+  const { theme, setTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -49,6 +56,31 @@ export default function UserButton({
             <DropdownMenuSeparator />
           </>
         )}
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>
+            <Monitor className="mr-2 size-4" />
+            Theme
+          </DropdownMenuSubTrigger>
+          <DropdownMenuPortal>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem onClick={() => setTheme("system")}>
+                <Monitor className="mr-2 size-4" />
+                System
+                {theme === "system" && <Check className="ms-2 size-4" />}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("light")}>
+                <Monitor className="mr-2 size-4" />
+                Light
+                {theme === "light" && <Check className="ms-2 size-4" />}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setTheme("dark")}>
+                <Monitor className="mr-2 size-4" />
+                Dark
+                {theme === "dark" && <Check className="ms-2 size-4" />}
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuPortal>
+        </DropdownMenuSub>
         {loggedInMember ? (
           <DropdownMenuItem onClick={() => logout()}>
             <LogOutIcon className="mr-2 size-4" />
