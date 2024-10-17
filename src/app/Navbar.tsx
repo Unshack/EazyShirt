@@ -6,22 +6,28 @@ import Link from "next/link";
 import ShoppingCartButton from "./ShoppingCartButton";
 import UserButton from "@/components/UserButton";
 import { getLoggedInMember } from "@/wix-api/members";
+import { getCollections } from "@/wix-api/collections";
+import MainNavigation from "./MainNavigation";
 
 export default async function Navbar() {
   const wixClient = getWixServerClient();
 
-  const [cart, loggedInMember] = await Promise.all([
+  const [cart, loggedInMember, collections] = await Promise.all([
     getCart(wixClient),
     getLoggedInMember(wixClient),
+    getCollections(wixClient),
   ]);
 
   return (
     <header className="bg-background shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 p-5">
-        <Link href="/" className="flex items-center gap-4">
-          <Image src={logo} alt="Eazy Shirt logo" width={30} height={30} />
-          <span className="text-xl font-bold">Eazy Shirt</span>
-        </Link>
+        <div className="flex flex-wrap items-center gap-5">
+          <Link href="/" className="flex items-center gap-4">
+            <Image src={logo} alt="Eazy Shirt logo" width={30} height={30} />
+            <span className="text-xl font-bold">Eazy Shirt</span>
+          </Link>
+          <MainNavigation collections={collections} />
+        </div>
         <div className="flex items-center justify-center gap-5">
           <UserButton
             loggedInMember={loggedInMember}
