@@ -3,6 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ProductsSort } from "@/wix-api/products";
 import { collections } from "@wix/stores";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useOptimistic, useState, useTransition } from "react";
@@ -23,6 +31,7 @@ export default function SearchFilterLayout({
     collection: searchParams.getAll("collection"),
     price_min: searchParams.get("price_min") || undefined,
     price_max: searchParams.get("price_max") || undefined,
+    sort: searchParams.get("sort") || undefined,
   });
 
   const [isPending, startTransition] = useTransition();
@@ -74,7 +83,12 @@ export default function SearchFilterLayout({
         />
       </aside>
       <div className="w-full max-w-7xl space-y-5">
-        <div className="flex justify-center lg:justify-end">sort filter:</div>
+        <div className="flex justify-center lg:justify-end">
+          <SortFilter
+            sort={optimisticFilters.sort}
+            updateSort={(sort) => updateFilters({ sort })}
+          />
+        </div>
         {children}
       </div>
     </main>
@@ -191,5 +205,27 @@ function PriceFilter({
         </button>
       )}
     </div>
+  );
+}
+
+interface SortFilterProps {
+  sort: string | undefined;
+  updateSort: (value: ProductsSort) => void;
+}
+
+function SortFilter({ sort, updateSort }: SortFilterProps) {
+  return (
+    <Select value={sort || "last_updated"} onValueChange={updateSort}>
+      <SelectTrigger className="w-fit gap-2 text-start">
+        <span>
+          Sort by: <SelectValue />
+        </span>
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="last_updated">Newest</SelectItem>
+        <SelectItem value="price_asc">Price (Low to high)</SelectItem>
+        <SelectItem value="price_desc">Price (High to low)</SelectItem>
+      </SelectContent>
+    </Select>
   );
 }
