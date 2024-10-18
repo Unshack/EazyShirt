@@ -13,6 +13,8 @@ interface PageProps {
     q?: string;
     page?: string;
     collection?: string[];
+    price_min?: string;
+    price_max?: string;
   };
 }
 
@@ -23,7 +25,13 @@ export function generateMetadata({ searchParams: { q } }: PageProps): Metadata {
 }
 
 export default async function Page({
-  searchParams: { q, page = "1", collection: collectionIds },
+  searchParams: {
+    q,
+    page = "1",
+    collection: collectionIds,
+    price_min,
+    price_max,
+  },
 }: PageProps) {
   const title = q ? `Results for "${q}"` : "Products";
 
@@ -35,6 +43,8 @@ export default async function Page({
           q={q}
           page={parseInt(page)}
           collectionIds={collectionIds}
+          priceMin={price_min ? parseInt(price_min) : undefined}
+          priceMax={price_max ? parseInt(price_max) : undefined}
         />
       </Suspense>
     </div>
@@ -45,10 +55,18 @@ interface ProductResultsProps {
   q?: string;
   page: number;
   collectionIds?: string[];
+  priceMin?: number;
+  priceMax?: number;
 }
 
-async function ProductResults({ q, page, collectionIds }: ProductResultsProps) {
-  await delay(2000);
+async function ProductResults({
+  q,
+  page,
+  collectionIds,
+  priceMin,
+  priceMax,
+}: ProductResultsProps) {
+  await delay(1000);
 
   const pageSize = 8;
 
@@ -57,6 +75,8 @@ async function ProductResults({ q, page, collectionIds }: ProductResultsProps) {
     limit: pageSize,
     skip: (page - 1) * pageSize,
     collectionIds,
+    priceMin,
+    priceMax,
   });
 
   if (page > (products.totalPages || 1)) notFound();
