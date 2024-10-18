@@ -9,6 +9,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import UserButton from "@/components/UserButton";
+import { twConfig } from "@/lib/utils";
 import { members } from "@wix/members";
 import { collections } from "@wix/stores";
 import { MenuIcon } from "lucide-react";
@@ -29,6 +30,16 @@ export default function MobileMenu({
   const searchParams = useSearchParams();
 
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleSize = () => {
+      if (window.innerWidth > parseInt(twConfig.theme.screens.lg)) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("resize", handleSize);
+    return () => window.removeEventListener("resize", handleSize);
+  }, []);
 
   useEffect(() => {
     setIsOpen(false);
