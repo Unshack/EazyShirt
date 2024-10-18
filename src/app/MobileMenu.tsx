@@ -13,7 +13,8 @@ import { members } from "@wix/members";
 import { collections } from "@wix/stores";
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface MobileMenuProps {
   collections: collections.Collection[];
@@ -24,7 +25,14 @@ export default function MobileMenu({
   collections,
   loggedInMember,
 }: MobileMenuProps) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname, searchParams]);
 
   return (
     <>
