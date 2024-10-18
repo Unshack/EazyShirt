@@ -9,6 +9,7 @@ import { getLoggedInMember } from "@/wix-api/members";
 import { getCollections } from "@/wix-api/collections";
 import MainNavigation from "./MainNavigation";
 import SearchField from "@/components/SearchField";
+import MobileMenu from "./MobileMenu";
 
 export default async function Navbar() {
   const wixClient = getWixServerClient();
@@ -22,14 +23,18 @@ export default async function Navbar() {
   return (
     <header className="bg-background shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 p-5">
+        <MobileMenu collections={collections} loggedInMember={loggedInMember} />
         <div className="flex flex-wrap items-center gap-5">
           <Link href="/" className="flex items-center gap-4">
             <Image src={logo} alt="Eazy Shirt logo" width={30} height={30} />
             <span className="text-xl font-bold">Eazy Shirt</span>
           </Link>
-          <MainNavigation collections={collections} />
+          <MainNavigation
+            collections={collections}
+            className="hidden lg:flex"
+          />
         </div>
-        <SearchField className="max-w-96" />
+        <SearchField className="hidden max-w-96 lg:inline" />
         <div className="flex items-center justify-center gap-5">
           <UserButton
             loggedInMember={loggedInMember}
