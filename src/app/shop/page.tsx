@@ -62,7 +62,7 @@ async function ProductResults({ q, page, collectionIds }: ProductResultsProps) {
   if (page > (products.totalPages || 1)) notFound();
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 group-has-[[data-pending]]:animate-pulse">
       <p className="text-center text-xl">
         {products.totalCount}{" "}
         {products.totalCount === 1 ? "product" : "products"} found
