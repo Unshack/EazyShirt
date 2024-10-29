@@ -7,6 +7,13 @@ import { getWixServerClient } from "@/lib/wix-client.server";
 import Product from "@/components/Products";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { products } from "@wix/stores";
+import { getLoggedInMember } from "@/wix-api/members";
+import { getProductReviews } from "@/wix-api/reviews";
+import CreateProductReviewButton from "@/components/reviews/CreateProductReviewButton";
+import ProductReviews, {
+  ProductReviewsLoadingSkeleton,
+} from "./ProductReviews";
 
 interface PageProps {
   params: { slug: string };
@@ -40,7 +47,6 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params: { slug } }: PageProps) {
-  await delay(3000);
 
   const product = await getProductBySlug(getWixServerClient(), slug);
 
@@ -56,9 +62,9 @@ export default async function Page({ params: { slug } }: PageProps) {
       <hr />
       <div className="space-y-5">
         <h2 className="text-2xl font-bold">Buyer reviews</h2>
-        {/* <Suspense fallback={<ProductReviewsLoadingSkeleton />}>
+        <Suspense fallback={<ProductReviewsLoadingSkeleton />}>
           <ProductReviewsSection product={product} />
-        </Suspense> */}
+        </Suspense>
       </div>
     </main>
   );
@@ -94,6 +100,38 @@ function RelatedProductsLoadingSkeleton() {
       {Array.from({ length: 4 }).map((_, i) => (
         <Skeleton key={i} className="h-[26rem] w-full" />
       ))}
+    </div>
+  );
+}
+
+interface ProductReviewsSectionProps {
+  product: products.Product;
+}
+
+async function ProductReviewsSection({ product }: ProductReviewsSectionProps) {
+  if (!product._id) return null;
+
+  const wixClient = getWixServerClient();
+
+  const loggedInMember = await getLoggedInMember(wixClient);
+
+  const existingReview = loggedInMember?.contactId
+    ? (
+        await getProductReviews(wixClient, {
+          productId: product._id,
+          contactId: loggedInMember.contactId,
+        })
+      ).items[0]
+    : null;
+
+  return (
+    <div className="space-y-5">
+      <CreateProductReviewButton
+        product={product}
+        loggedInMember={loggedInMember}
+        hasExistingReview={!!existingReview}
+      />
+      <ProductReviews product={product} />
     </div>
   );
 }

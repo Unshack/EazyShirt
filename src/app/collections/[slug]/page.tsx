@@ -57,7 +57,6 @@ interface ProductsProps {
 }
 
 async function Products({ collectionId, page }: ProductsProps) {
-  await delay(2000);
 
   const pageSize = 8;
 
